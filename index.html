@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suara Hati - The Scream Box</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: #e2e8f0;
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .black-hole-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .black-hole {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, #000 30%, #1a1a1a 60%, transparent 80%);
+            border-radius: 50%;
+            box-shadow: 0 0 50px 20px rgba(255, 0, 0, 0.2);
+            animation: swirl 2s linear infinite;
+        }
+
+        @keyframes swirl {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .content-box {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        textarea {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            resize: none;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #ef4444;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+        }
+
+        .scream-btn {
+            background: linear-gradient(45deg, #7f1d1d, #ef4444);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 900;
+        }
+
+        .scream-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Particle effect class */
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .hancur {
+            animation: suckIn 1.5s forwards ease-in;
+            pointer-events: none;
+        }
+
+        @keyframes suckIn {
+            0% { transform: scale(1) rotate(0deg); opacity: 1; filter: blur(0); }
+            100% { transform: scale(0) rotate(720deg); opacity: 0; filter: blur(10px); }
+        }
+
+        .title-glitch {
+            text-shadow: 2px 2px #ff0000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="black-hole-container" id="blackHole">
+        <div class="black-hole"></div>
+    </div>
+
+    <div class="content-box" id="mainContent">
+        <h1 class="text-4xl md:text-6xl font-black mb-2 title-glitch">SUARA HATI</h1>
+        <p class="text-gray-400 mb-8 italic">Lepaskan semuanya di sini. Tiada siapa yang akan tahu.</p>
+        
+        <div class="relative">
+            <textarea 
+                id="screamText" 
+                class="w-full h-64 p-6 rounded-2xl shadow-2xl mb-6" 
+                placeholder="Tuliskan kemarahan, rahsia, atau kesedihan anda di sini..."></textarea>
+        </div>
+
+        <button 
+            onclick="startScream()" 
+            id="screamBtn"
+            class="scream-btn px-12 py-4 rounded-full text-white text-xl shadow-lg hover:shadow-red-500/50">
+            JERIT SEKARANG!
+        </button>
+
+        <p id="instruction" class="mt-6 text-sm text-gray-500">Klik butang di atas untuk membuang beban ini selamanya.</p>
+    </div>
+
+    <!-- Audio components (Using Web Audio API for a synthesized scream/whoosh) -->
+    
+    <script>
+        const screamText = document.getElementById('screamText');
+        const mainContent = document.getElementById('mainContent');
+        const blackHole = document.getElementById('blackHole');
+        const screamBtn = document.getElementById('screamBtn');
+
+        function createExplosion(x, y) {
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 4 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random destination
+                const destinationX = (Math.random() - 0.5) * 400;
+                const destinationY = (Math.random() - 0.5) * 400;
+                
+                document.body.appendChild(particle);
+                
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                
+                const animation = particle.animate([
+                    { transform: 'translate(0, 0)', opacity: 1 },
+                    { transform: `translate(${destinationX}px, ${destinationY}px)`, opacity: 0 }
+                ], {
+                    duration: 1000 + Math.random() * 1000,
+                    easing: 'cubic-bezier(0, .9, .57, 1)',
+                    fill: 'forwards'
+                });
+                
+                animation.onfinish = () => particle.remove();
+            }
+        }
+
+        // Simple Synthesized Sound for "Scream" effect
+        function playScreamSound() {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            oscillator.type = 'sawtooth';
+            oscillator.frequency.setValueAtTime(100, audioCtx.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.5);
+            oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 1.5);
+
+            gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5);
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 1.5);
+            
+            // White noise for whoosh
+            const bufferSize = audioCtx.sampleRate * 2;
+            const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+            const noise = audioCtx.createBufferSource();
+            noise.buffer = buffer;
+            const noiseGain = audioCtx.createGain();
+            noiseGain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            noiseGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 2);
+            noise.connect(noiseGain);
+            noiseGain.connect(audioCtx.destination);
+            noise.start();
+        }
+
+        function startScream() {
+            const text = screamText.value.trim();
+            if (!text) {
+                screamText.placeholder = "Tolong tuliskan sesuatu dahulu...";
+                return;
+            }
+
+            screamBtn.disabled = true;
+            playScreamSound();
+
+            // Visual feedback: Black hole appears
+            blackHole.style.opacity = '1';
+            
+            // Shake effect
+            mainContent.animate([
+                { transform: 'translate(1px, 1px) rotate(0deg)' },
+                { transform: 'translate(-1px, -2px) rotate(-1deg)' },
+                { transform: 'translate(-3px, 0px) rotate(1deg)' },
+                { transform: 'translate(3px, 2px) rotate(0deg)' },
+                { transform: 'translate(1px, -1px) rotate(1deg)' },
+                { transform: 'translate(-1px, 2px) rotate(-1deg)' }
+            ], {
+                duration: 100,
+                iterations: 15
+            });
+
+            // Delay the "destruction"
+            setTimeout(() => {
+                const rect = screamText.getBoundingClientRect();
+                createExplosion(rect.left + rect.width / 2, rect.top + rect.height / 2);
+                
+                screamText.classList.add('hancur');
+                
+                setTimeout(() => {
+                    screamText.value = '';
+                    screamText.classList.remove('hancur');
+                    blackHole.style.opacity = '0';
+                    screamBtn.disabled = false;
+                    
+                    // Show message box instead of alert
+                    const msg = document.createElement('div');
+                    msg.className = 'fixed top-10 left-1/2 -translate-x-1/2 bg-green-600 text-white px-6 py-2 rounded-full shadow-lg z-50 animate-bounce';
+                    msg.innerText = "Lega, bukan? Semuanya sudah hilang.";
+                    document.body.appendChild(msg);
+                    setTimeout(() => msg.remove(), 3000);
+                    
+                }, 1500);
+            }, 500);
+        }
+
+        // Handle touch events for mobile
+        screamBtn.addEventListener('touchstart', function(e) {
+            // Native button handles this, but we ensure interaction is smooth
+        });
+    </script>
+</body>
+</html>
