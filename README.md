@@ -1,6 +1,3 @@
-# the-scream-box
-A therapeutic digital space to release suppressed emotions anonymously. Write down your anger or secrets and watch them vanish into the void.
-
 # 🌌 Suara Hati - The Scream Box
 
 A minimalist web-based emotional outlet designed to help users let go of heavy thoughts through a symbolic visual experience.
