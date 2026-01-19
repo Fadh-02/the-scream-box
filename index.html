@@ -126,24 +126,24 @@
     </div>
 
     <div class="content-box" id="mainContent">
-        <h1 class="text-4xl md:text-6xl font-black mb-2 title-glitch">SUARA HATI</h1>
-        <p class="text-gray-400 mb-8 italic">Lepaskan semuanya di sini. Tiada siapa yang akan tahu.</p>
+        <h1 class="text-4xl md:text-6xl font-black mb-2 title-glitch">The Scream Box</h1>
+        <p class="text-gray-400 mb-8 italic">Let it all out here. No one will ever know.</p>
         
         <div class="relative">
             <textarea 
                 id="screamText" 
                 class="w-full h-64 p-6 rounded-2xl shadow-2xl mb-6" 
-                placeholder="Tuliskan kemarahan, rahsia, atau kesedihan anda di sini..."></textarea>
+                placeholder="Write down your anger, secrets, or sadness here..."></textarea>
         </div>
 
         <button 
             onclick="startScream()" 
             id="screamBtn"
             class="scream-btn px-12 py-4 rounded-full text-white text-xl shadow-lg hover:shadow-red-500/50">
-            JERIT SEKARANG!
+            SCREAM NOW!
         </button>
 
-        <p id="instruction" class="mt-6 text-sm text-gray-500">Klik butang di atas untuk membuang beban ini selamanya.</p>
+        <p id="instruction" class="mt-6 text-sm text-gray-500">Click the button above to let go of this weight for good.</p>
     </div>
 
     <!-- Audio components (Using Web Audio API for a synthesized scream/whoosh) -->
@@ -225,7 +225,7 @@
         function startScream() {
             const text = screamText.value.trim();
             if (!text) {
-                screamText.placeholder = "Tolong tuliskan sesuatu dahulu...";
+                screamText.placeholder = "Please write something first...";
                 return;
             }
 
@@ -264,7 +264,7 @@
                     // Show message box instead of alert
                     const msg = document.createElement('div');
                     msg.className = 'fixed top-10 left-1/2 -translate-x-1/2 bg-green-600 text-white px-6 py-2 rounded-full shadow-lg z-50 animate-bounce';
-                    msg.innerText = "Lega, bukan? Semuanya sudah hilang.";
+                    msg.innerText = "Feels good, right? Everything is gone.";
                     document.body.appendChild(msg);
                     setTimeout(() => msg.remove(), 3000);
                     
@@ -280,3 +280,4 @@
 </body>
 
 </html>
+
