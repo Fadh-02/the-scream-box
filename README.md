@@ -1,6 +1,7 @@
 # 🌌 Suara Hati - The Scream Box
 
-**A therapeutic digital space to release suppressed emotions anonymously. Write down your anger or secrets and watch them vanish into the void.** *Sebuah ruang digital terapeutik untuk melepaskan emosi yang terpendam secara anonim. Tuliskan kemarahan atau rahsia anda dan saksikan ia hilang ditelan kegelapan.*
+**A therapeutic digital space to release suppressed emotions anonymously. Write down your anger or secrets and watch them vanish into the void.** 
+*Sebuah ruang digital terapeutik untuk melepaskan emosi yang terpendam secara anonim. Tuliskan kemarahan atau rahsia anda dan saksikan ia hilang ditelan kegelapan.*
 
 ---
 
